@@ -4,6 +4,7 @@ import { Engine } from 'json-rules-engine';
 import { RuleDAO } from '../dao/RuleDAO';
 import { supabase } from '../config/db';
 import axios from 'axios';
+import { GradeDAO } from '../dao/GradeDAO';
 export default class ExecutionService {
   // 1️⃣ Already working — keep as-is
   
@@ -205,6 +206,138 @@ static async applyRulesToRevenue(tenantId: string) {
       success: true
     };
   }
+  
+  static async applyGradingRulesFromNL(input: string, tenantId: string) {
+    console.log('📊 Applying grading rules via NLP');
+    console.log('📝 Raw input:', input);
+  
+    const rules = await RuleDAO.getActiveRulesByTenant(tenantId);
+    console.log('📜 Active rules fetched:', rules.map(r => r.name));
+  
+    if (!rules.length) {
+      return { message: '❌ No active rules found', result: [], success: false };
+    }
+  
+    const sanitizeOperator = (op: string): string => {
+      switch (op) {
+        case '>': return 'greaterThan';
+        case '>=': return 'greaterThanInclusive';
+        case '<': return 'lessThan';
+        case '<=': return 'lessThanInclusive';
+        default: return op;
+      }
+    };
+  
+    const sanitizeConditions = (conditions: any): any => {
+      if (conditions.all) {
+        conditions.all = conditions.all.map((cond: any) => ({
+          ...cond,
+          operator: sanitizeOperator(cond.operator)
+        }));
+      }
+      if (conditions.any) {
+        conditions.any = conditions.any.map((cond: any) => ({
+          ...cond,
+          operator: sanitizeOperator(cond.operator)
+        }));
+      }
+      return conditions;
+    };
+  
+    // 🧠 Extract students (e.g., "Anu 85", or "Anu scored 85 marks")
+    const nameMarksPairs = [...input.matchAll(/\b([A-Z][a-z]+)\s+(\d{1,3})\b/g)];
+    const scoredFormat = [...input.matchAll(/\b([A-Z][a-z]+)\s+scored\s+(\d{1,3})\s+marks\b/gi)];
+  
+    const extractedStudents = [...nameMarksPairs, ...scoredFormat].map(match => ({
+      name: match[1],
+      marks: parseInt(match[2], 10)
+    }));
+  
+    console.log('🧾 Extracted students from input:', extractedStudents);
+  
+    if (!extractedStudents.length) {
+      return {
+        message: '⚠️ No student name and mark pairs found in input',
+        result: [],
+        success: false
+      };
+    }
+  
+    const allStudents = await GradeDAO.getGradesByTenant(tenantId);
+    console.log('📚 All student records from DB:', allStudents.map(s => ({ name: s.name, marks: s.marks })));
+  
+    const engine = new Engine();
+    rules.forEach((r) => {
+      const safeConditions = sanitizeConditions(r.conditions);
+      console.log(`⚙️ Adding rule to engine: ${r.name}`, safeConditions);
+      engine.addRule({
+        name: r.name,
+        conditions: safeConditions,
+        event: r.event
+      });
+    });
+  
+    const results: any[] = [];
+  
+    for (const extracted of extractedStudents) {
+      const dbStudent = allStudents.find(s => s.name === extracted.name);
+  
+      if (!dbStudent) {
+        console.log(`❌ Student "${extracted.name}" not found in DB`);
+        results.push({
+          name: extracted.name,
+          inputMarks: extracted.marks,
+          message: 'Student not found in database'
+        });
+        continue;
+      }
+  
+      if (dbStudent.marks !== extracted.marks) {
+        console.log(`⚠️ Marks mismatch for ${extracted.name}: input=${extracted.marks}, DB=${dbStudent.marks}`);
+        results.push({
+          name: dbStudent.name,
+          inputMarks: extracted.marks,
+          actualMarks: dbStudent.marks,
+          message: `Student exists but marks mismatch (expected ${extracted.marks}, found ${dbStudent.marks} No rule matched)`
+        });
+        continue;
+      }
+  
+      const facts = {
+        name: dbStudent.name,
+        marks: dbStudent.marks
+      };
+  
+      console.log(`🔍 Evaluating: ${facts.name} with marks: ${facts.marks}`);
+      const { events } = await engine.run(facts);
+      console.log('📌 Events matched:', events);
+  
+      if (events.length) {
+        const gradeAssigned = events[0].params?.grade || null;
+        results.push({
+          name: dbStudent.name,
+          marks: dbStudent.marks,
+          grade: gradeAssigned
+        });
+      } else {
+        results.push({
+          name: dbStudent.name,
+          marks: dbStudent.marks,
+          grade: null,
+          message: 'No rule matched'
+        });
+      }
+    }
+  
+    return {
+      message: results.length
+        ? `📋 Evaluated ${results.length} students`
+        : '⚠️ No matches evaluated',
+      result: results,
+      success: true
+    };
+  }
+  
   
 }
 
