@@ -20,4 +20,22 @@ export interface Condition {
     is_Active: boolean;
     tenant_Id: string;
   }
-  
+  export interface GeminiRule {
+    name: string;
+    description?: string;
+    conditions: RuleCondition;
+    event: RuleEvent;
+    }
+    
+    export interface RuleCondition {
+    all?: RuleCondition[];
+    any?: RuleCondition[];
+    fact?: string;
+    operator?: string;
+    value?: any;
+    }
+    
+    export interface RuleEvent {
+    type: string;
+    params: Record<string, any>;
+    }

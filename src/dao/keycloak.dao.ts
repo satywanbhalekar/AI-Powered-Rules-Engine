@@ -20,6 +20,22 @@ export class KeycloakDAO {
 
     return response.data;
   }
+  static async getAllRealms() {
+    const token = await getAdminToken();
+  
+    const response = await axios.get(
+      `${config.keycloak.baseUrl}/admin/realms`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  
+    return response.data;
+  }
+  
   static async deleteRealm(realmName: string) {
     const token = await getAdminToken();
   

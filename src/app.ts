@@ -3,7 +3,7 @@ import cors from 'cors';
 import helmet from "helmet";
 import ruleRoutes from './routes/rule.routes';
 import realmRoutes from './routes/realm.routes';
-
+import executionRoutes from './routes/execution.routes';
 import userRoutes from './routes/user.routes';
 //import { authenticateToken } from './middlewares/authenticateToken';
 
@@ -66,7 +66,8 @@ app.options("*", cors({
 app.use(express.json());
 // Simple logging middleware to log requests and responses data
 app.use('/api/v1/realms', realmRoutes);
-app.use('/api/rules', ruleRoutes);
+app.use('/api/v1/rules', ruleRoutes);
+app.use('/api/v1/', executionRoutes);
 //app.use("/api/v1/thoughtspot", authenticateJWT, thoughtspotRoutes);
 app.use('/api/v1/users', userRoutes);
 

@@ -12,6 +12,19 @@ export const createRealm = async (req: Request, res: Response) => {
   }
   
 };
+
+export const getAllRealms = async (req: Request, res: Response) => {
+  try {
+    const realms = await RealmService.getAllRealms();
+    res.status(200).json({ realms });
+  } catch (err: any) {
+    res.status(err?.response?.status || 500).json({
+      error: err?.response?.data?.error || err.message,
+    });
+  }
+};
+
+
 export const deleteRealm = async (req: Request, res: Response) => {
     try {
       const { realmName } = req.params;

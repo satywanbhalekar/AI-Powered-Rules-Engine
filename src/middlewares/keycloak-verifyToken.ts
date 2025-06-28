@@ -51,18 +51,18 @@ export function verifyTokenLocal(): (req: Request, res: Response, next: NextFunc
     const client_id: string = req.headers.client_id as string;
     console.log("client_id =>", client_id);
     let realm ;
-   // if (req.originalUrl == '/api/v1/tenants/initialRealmSetup') {
-        if (req.originalUrl == '/api/v1/rules') {
+   if (req.originalUrl == '/api/v1/rules/') {
+       // if (req.originalUrl == '/api/v1/rules') {
       console.log("inside initial realm setup")
-      realm = 'master';
+      realm = 'RuleMaster';
       req.headers.operation = 'starfish_realmsetup'
-    } else if (req.originalUrl == '/api/v1/tenants') {
+    } else if (req.originalUrl == '/api/v1/rules') {
       console.log("inside tenant realm creation")
       realm = 'RuleMaster';
       req.headers.operation = 'tenant_realmsetup'
     }else {
       realm = req.params.tenant;
-      if(req.originalUrl == `/api/v1/tenants/${realm}` && req.method == 'DELETE'){
+      if(req.originalUrl == `/api/v1/rules/${realm}` && req.method == 'DELETE'){
         realm = 'RuleMaster';
       }
     }

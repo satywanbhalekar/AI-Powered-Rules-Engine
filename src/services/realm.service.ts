@@ -5,6 +5,10 @@ export class RealmService {
   static async createRealm(realm: RealmConfig) {
     return KeycloakDAO.createRealm(realm);
   }
+  static async getAllRealms() {
+    return KeycloakDAO.getAllRealms();
+  }
+  
   static async deleteRealm(realmName: string) {
     return KeycloakDAO.deleteRealm(realmName);
   }
