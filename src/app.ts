@@ -5,6 +5,7 @@ import ruleRoutes from './routes/rule.routes';
 import realmRoutes from './routes/realm.routes';
 import executionRoutes from './routes/execution.routes';
 import userRoutes from './routes/user.routes';
+import copilotAdapterRoutes from './routes/copilotAdapter';
 //import { authenticateToken } from './middlewares/authenticateToken';
 
 const app = express();
@@ -65,10 +66,11 @@ app.options("*", cors({
 }));
 app.use(express.json());
 // Simple logging middleware to log requests and responses data
+
+app.use('/api/copilot-backend-adapter', copilotAdapterRoutes);
 app.use('/api/v1/realms', realmRoutes);
 app.use('/api/v1/rules', ruleRoutes);
 app.use('/api/v1/', executionRoutes);
-//app.use("/api/v1/thoughtspot", authenticateJWT, thoughtspotRoutes);
 app.use('/api/v1/users', userRoutes);
 
 

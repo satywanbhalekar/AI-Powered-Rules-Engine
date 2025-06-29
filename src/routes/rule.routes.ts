@@ -6,7 +6,7 @@ import { RuleController } from '../controllers/RuleController';
 
 const router = Router();
 router.post('/parse-and-save', RuleController.parseAndSave);
-router.put('/parse-and-update', RuleController.parseAndUpdateByName);
+router.post('/parse-and-update', RuleController.parseAndUpdateByName);
 
 //router.post('/apply', RuleController.applyRule);
 // router.post('/',verifyTokenLocal(),protectKeycloak(`resource-permission`),keycloakEnforcer(`resource-permission`), RuleController.create);
