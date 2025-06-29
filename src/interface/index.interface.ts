@@ -1,48 +1,19 @@
-export interface UserProfile {
+export interface RealmConfig {
   id: string;
-  name: string;
-  profession: string;
-  interests?: string[];
-  hobbies?: string[];
-  preferred_themes?: string[];
-  social_accounts?: string[];
-  created_at?: string;
+  realm: string;
+  enabled: boolean;
+  [key: string]: any;
 }
-
-// src/interface/onboardingSession.interface.ts
-
-export interface OnboardingSession {
-  session_id: string;
-  user_id?: string | null;
-  step?: string | null;
-  profession?: string | null;
-  interests?: string[] | null;
-  hobbies?: string[] | null;
-  preferred_themes?: string[] | null;
-  full_name?: string | null;
-  email?: string | null;
-  created_at?: string; // ISO string format (e.g., "2025-06-17T12:34:56Z")
-}
-
-
-export interface UserSocialAccount {
+export interface User {
   id?: string;
-  user_id: string;
-  platform: "instagram" | "linkedin";
-  access_token: string;
-  account_name: string;
-  account_id: string;
-  created_at?: string;
+  username: string;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  enabled: boolean;
+  emailVerified?: boolean;
+  realmRoles?: string[];
+  access?: Record<string, boolean>;
+  createdTimestamp?: number;
 }
 
-export interface PostRequest {
-  id: string;
-  user_id: string;
-  session_id: string;
-  topic?: string;
-  raw_input: string;
-  generated_posts: Record<string, string>; // e.g., { variant1: "...", variant2: "..." }
-  selected_post?: string;
-  feedback?: string;
-  created_at?: string;
-}
