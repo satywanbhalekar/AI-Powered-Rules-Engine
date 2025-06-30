@@ -263,7 +263,16 @@ static async applyRulesToRevenue(tenantId: string) {
       };
     }
   
-    const allStudents = await GradeDAO.getGradesByTenant(tenantId);
+    // const allStudents = await GradeDAO.getGradesByTenant(tenantId);
+    // console.log('📚 All student records from DB:', allStudents.map(s => ({ name: s.name, marks: s.marks })));
+    const studentRecords = await Promise.all(
+      extractedStudents.map(s =>
+        GradeDAO.getGradesByNameAndMarks(s.name, s.marks)
+      )
+    );
+    
+    // Flatten the nested arrays (in case multiple results per student)
+    const allStudents = studentRecords.flat();
     console.log('📚 All student records from DB:', allStudents.map(s => ({ name: s.name, marks: s.marks })));
   
     const engine = new Engine();

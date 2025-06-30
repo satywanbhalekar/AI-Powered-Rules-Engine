@@ -89,6 +89,7 @@ import realmRoutes from './routes/realm.routes';
 import executionRoutes from './routes/execution.routes';
 import userRoutes from './routes/user.routes';
 import copilotAdapterRoutes from './routes/copilotAdapter';
+import chatbotRoutes from "./routes/chatbot.routes";
 
 const app = express();
 
@@ -114,5 +115,5 @@ app.use('/api/v1/realms', realmRoutes);
 app.use('/api/v1/rules', ruleRoutes);
 app.use('/api/v1/', executionRoutes);
 app.use('/api/v1/users', userRoutes);
-
+app.use('/api/v1/chatbot', chatbotRoutes);
 export default app;

@@ -9,6 +9,17 @@ export class GradeDAO {
     if (error) throw new Error(`Supabase error: ${error.message}`);
     return data;
   }
+  static async getGradesByNameAndMarks(name: string, marks: number) {
+    const { data, error } = await supabase
+      .from('grade')
+      .select('*')
+      .eq('name', name)
+      .eq('marks', marks);
+  
+    if (error) throw new Error(`Supabase error: ${error.message}`);
+    return data;
+  }
+  
 
   static async updateGradeForStudent(studentId: string, grade: string, mark: number) {
     const { error } = await supabase
