@@ -328,14 +328,36 @@ static async applyRulesToRevenue(tenantId: string) {
         });
       }
     }
+    
   
+    // return {
+    //   message: results.length
+    //     ? `📋 Evaluated ${results.length} students`
+    //     : '⚠️ No matches evaluated',
+    //   result: results,
+    //   success: true
+    // };
+
+
+    const summary = results.map(r => {
+      if ('marks' in r && 'grade' in r) {
+        return `name: ${r.name}, marks: ${r.marks}, grade: ${r.grade}`;
+      } else if ('message' in r) {
+        return `name: ${r.name}, message: ${r.message}`;
+      } else {
+        return `name: ${r.name}, info: incomplete`;
+      }
+    }).join(', ');
+    
     return {
       message: results.length
-        ? `📋 Evaluated ${results.length} students`
+        ? `📋 Evaluated ${results.length} students — ${summary}`
         : '⚠️ No matches evaluated',
       result: results,
       success: true
     };
+    
+
   }
   
   

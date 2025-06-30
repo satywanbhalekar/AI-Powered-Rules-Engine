@@ -20,20 +20,36 @@ export class RuleController {
         }
       }
 
-    //   static async parseAndUpdateByName(req: Request, res: Response) {
+      
+    // static async parseAndUpdateByName(req: Request, res: Response) {
     //     const { input } = req.body;
     //     const tenantId = req.headers['x-tenant-id'] as string;
+    //   console.log("tenantIdtenantId",tenantId);
       
     //     if (!input || !tenantId) {
     //        res.status(400).json({ error: 'Missing input or tenant ID' });
     //     }
       
     //     try {
-    //       // Parse updated rule using Gemini
-    //       const parsedRule = await NLPService.parseToRule(input);
-    //       const ruleName = parsedRule.name;
+    //       // ✅ Extract rule name from input
+    //       const matches = input.match(/update a rule (\w+)/i);
+    //       if (!matches || matches.length < 2) {
+    //          res.status(400).json({
+    //           error: '❌ Could not extract rule name. Use: "update a rule <ruleName> ..."'
+    //         });
+    //       }
+    //       const ruleName = matches[1]; // e.g., "assignGradeC"
       
-    //       // Update the rule by name
+    //       // ✅ Remove rule name from input before sending to Gemini
+    //       const cleanedInput = input.replace(/update a rule \w+/i, 'update a rule');
+      
+    //       // ✅ Parse the rule using Gemini
+    //       const parsedRule = await NLPService.parseToRule(cleanedInput);
+      
+    //       // ✅ Force the correct rule name from user input
+    //       parsedRule.name = ruleName;
+      
+    //       // ✅ Update rule in DB
     //       const updated = await RuleService.updateRuleByName(ruleName, tenantId, parsedRule);
       
     //       res.json({
@@ -46,44 +62,39 @@ export class RuleController {
     //   }
       
     static async parseAndUpdateByName(req: Request, res: Response) {
-        const { input } = req.body;
-        const tenantId = req.headers['x-tenant-id'] as string;
-      
-        if (!input || !tenantId) {
-           res.status(400).json({ error: 'Missing input or tenant ID' });
-        }
-      
+      const { input } = req.body;
+      const tenantId = req.headers['x-tenant-id'] as string;
+      console.log("tenantIdtenantId", tenantId);
+    
+      if (!input || !tenantId) {
+        res.status(400).json({ error: 'Missing input or tenant ID' });
+      } else {
         try {
-          // ✅ Extract rule name from input
           const matches = input.match(/update a rule (\w+)/i);
           if (!matches || matches.length < 2) {
-             res.status(400).json({
-              error: '❌ Could not extract rule name. Use: "update a rule <ruleName> ..."'
+            res.status(400).json({
+              error: 'Could not extract rule name. Use: "update a rule <ruleName> ..."'
+            });
+          } else {
+            const ruleName = matches[1];
+    
+            const cleanedInput = input.replace(/update a rule \w+/i, 'update a rule');
+            const parsedRule = await NLPService.parseToRule(cleanedInput);
+            parsedRule.name = ruleName;
+    
+            const updated = await RuleService.updateRuleByName(ruleName, tenantId, parsedRule);
+    
+            res.json({
+              message: `✅ Rule "${ruleName}" updated successfully`,
+              rule: updated
             });
           }
-          const ruleName = matches[1]; // e.g., "assignGradeC"
-      
-          // ✅ Remove rule name from input before sending to Gemini
-          const cleanedInput = input.replace(/update a rule \w+/i, 'update a rule');
-      
-          // ✅ Parse the rule using Gemini
-          const parsedRule = await NLPService.parseToRule(cleanedInput);
-      
-          // ✅ Force the correct rule name from user input
-          parsedRule.name = ruleName;
-      
-          // ✅ Update rule in DB
-          const updated = await RuleService.updateRuleByName(ruleName, tenantId, parsedRule);
-      
-          res.json({
-            message: `✅ Rule "${ruleName}" updated successfully`,
-            rule: updated
-          });
         } catch (err) {
           res.status(500).json({ error: (err as Error).message });
         }
       }
-      
+    }
+    
 
   static async create(req: Request, res: Response) {
     try {
