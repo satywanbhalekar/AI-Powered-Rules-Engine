@@ -15,7 +15,7 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin https://gitlab.gitlabsh.cateina.com/gfintech/nodeserver.git
+git remote add origin 
 git branch -M main
 git push -uf origin main
 ```
