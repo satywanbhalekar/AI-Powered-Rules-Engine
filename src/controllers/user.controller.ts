@@ -1,14 +1,31 @@
 import { Request, Response } from 'express';
 import { UserService } from '../services/user.service';
 
+// export const createUser = async (req: Request, res: Response) => {
+//   try {
+//     await UserService.createUser(req.params.realm, req.body);
+//     res.status(201).json({ message: 'User created' });
+//   } catch (err: any) {
+//     console.log("err?.response?.status || 500).json({ error: err?.message }",err.data.errorMessage);
+    
+//     res.status(err?.response?.status || 500).json({ error: err.message });
+//   }
+// };
 export const createUser = async (req: Request, res: Response) => {
   try {
     await UserService.createUser(req.params.realm, req.body);
     res.status(201).json({ message: 'User created' });
   } catch (err: any) {
-    res.status(err?.response?.status || 500).json({ error: err?.message });
+    // Log the full error for debugging
+   // console.error('[Controller:createUser] Error:', err?.response?.data || err?.data || err.message);
+    // Extract a safe error message
+    const errorMessage =
+      err?.response?.data?.errorMessage || err?.data?.errorMessage || err?.message || 'Unknown error';
+
+    res.status(err?.response?.status || 500).json({ error: errorMessage });
   }
 };
+
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
