@@ -18,7 +18,6 @@ export const createUser = async (req: Request, res: Response) => {
   } catch (err: any) {
     // Log the full error for debugging
    // console.error('[Controller:createUser] Error:', err?.response?.data || err?.data || err.message);
-
     // Extract a safe error message
     const errorMessage =
       err?.response?.data?.errorMessage || err?.data?.errorMessage || err?.message || 'Unknown error';
