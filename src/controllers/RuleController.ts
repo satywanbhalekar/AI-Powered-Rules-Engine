@@ -73,7 +73,7 @@ export class RuleController {
           const matches = input.match(/update a rule (\w+)/i);
           if (!matches || matches.length < 2) {
             res.status(400).json({
-              error: 'Could not extract rule name. Use: "update a rule <ruleName> ..."'
+              error: 'no rule name Provided. Use: "update a rule <ruleName> ..."'
             });
           } else {
             const ruleName = matches[1];
