@@ -92,8 +92,6 @@ import copilotAdapterRoutes from './routes/copilotAdapter';
 
 const app = express();
 
-
-
 // ✅ Allow all origins and all headers
 app.use(cors({
   origin: '*',
