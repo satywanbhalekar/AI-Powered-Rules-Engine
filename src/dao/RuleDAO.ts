@@ -25,6 +25,8 @@ export class RuleDAO {
       }
 
       static async updateRuleByName(ruleName: string, tenant_Id: string, updates: any) {
+        console.log("ruleNameruleName",ruleName,tenant_Id);
+        
         const { data, error } = await supabase
           .from('rules')
           .update({

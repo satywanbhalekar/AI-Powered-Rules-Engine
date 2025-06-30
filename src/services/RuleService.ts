@@ -46,6 +46,8 @@ export class RuleService {
       static async updateRuleByName(ruleName: string, tenantId: string, updates: any) {
         console.log(`🔧 Updating rule "${ruleName}" for tenant ${tenantId}`);
         const updated = await RuleDAO.updateRuleByName(ruleName, tenantId, updates);
+        console.log("updated role",updated);
+        
         return updated;
       }
       
