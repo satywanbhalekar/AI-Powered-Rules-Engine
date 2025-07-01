@@ -1,6 +1,19 @@
 import { supabase } from '../config/db';
 
 export class GradeDAO {
+  static async getAllGrades() {
+    const { data, error } = await supabase
+      .from('grade')
+      .select('*');
+
+    if (error) {
+      console.error('[DAO:getAllGrades] Supabase error:', error.message);
+      throw new Error(`Supabase error: ${error.message}`);
+    }
+
+    return data;
+  }
+
   static async getGradesByTenant(tenantId: string) {
     const { data, error } = await supabase
       .from('grade')

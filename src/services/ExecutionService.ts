@@ -244,16 +244,30 @@ static async applyRulesToRevenue(tenantId: string) {
       return conditions;
     };
   
-    // 🧠 Extract students (e.g., "Anu 85", or "Anu scored 85 marks")
-    const nameMarksPairs = [...input.matchAll(/\b([A-Z][a-z]+)\s+(\d{1,3})\b/g)];
-    const scoredFormat = [...input.matchAll(/\b([A-Z][a-z]+)\s+scored\s+(\d{1,3})\s+marks\b/gi)];
+    // // 🧠 Extract students (e.g., "Anu 85", or "Anu scored 85 marks")
+    // const nameMarksPairs = [...input.matchAll(/\b([A-Z][a-z]+)\s+(\d{1,3})\b/g)];
+    // const scoredFormat = [...input.matchAll(/\b([A-Z][a-z]+)\s+scored\s+(\d{1,3})\s+marks\b/gi)];
   
-    const extractedStudents = [...nameMarksPairs, ...scoredFormat].map(match => ({
-      name: match[1],
-      marks: parseInt(match[2], 10)
-    }));
+    // const extractedStudents = [...nameMarksPairs, ...scoredFormat].map(match => ({
+    //   name: match[1],
+    //   marks: parseInt(match[2], 10)
+    // }));
   
-    console.log('🧾 Extracted students from input:', extractedStudents);
+    // console.log('🧾 Extracted students from input:', extractedStudents);
+    // 👇 New pattern: "Anu marks 75"
+const marksFormat = [...input.matchAll(/\b([A-Z][a-z]+)\s+marks\s+(\d{1,3})\b/gi)];
+
+// Your existing ones
+const nameMarksPairs = [...input.matchAll(/\b([A-Z][a-z]+)\s+(\d{1,3})\b/g)];
+const scoredFormat = [...input.matchAll(/\b([A-Z][a-z]+)\s+scored\s+(\d{1,3})\s+marks\b/gi)];
+
+// Combine all
+const extractedStudents = [...nameMarksPairs, ...scoredFormat, ...marksFormat].map(match => ({
+  name: match[1],
+  marks: parseInt(match[2], 10)
+}));
+
+console.log('🧾 Extracted students from input:', extractedStudents);
   
     if (!extractedStudents.length) {
       return {

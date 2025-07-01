@@ -46,10 +46,52 @@
 //   }
 // }
 
+// import axios from 'axios';
+// import config from '../config/env';
+
+// const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+
+// export async function chatWithGemini(prompt: string): Promise<string> {
+//   try {
+//     const response = await axios.post(
+//       `${GEMINI_API_URL}?key=${config.GEMINI_API_KEY}`,
+//       {
+//         contents: [
+//           {
+//             parts: [{ text: prompt }]
+//           }
+//         ]
+//       },
+//       {
+//         headers: {
+//           'Content-Type': 'application/json',
+//         }
+//       }
+//     );
+
+//     const text = response.data.candidates?.[0]?.content?.parts?.[0]?.text;
+//     return text?.trim() || 'Sorry, I didn’t get that.';
+
+//   } catch (error: any) {
+//     console.error('[Gemini API Error]:', error.response?.data || error.message);
+//     throw new Error('Failed to chat with Gemini API.');
+//   }
+// }
+
+
 import axios from 'axios';
 import config from '../config/env';
 
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+const GEMINI_API_URL =
+  'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+
+// Initial instruction for conversational mode
+const SYSTEM_PROMPT = `
+You are a helpful and friendly AI assistant. 
+You only respond conversationally to user questions. 
+Avoid taking any actions like applying rules, generating code, or modifying data.
+Just have a simple, friendly conversation with the user and answer their questions clearly.
+`;
 
 export async function chatWithGemini(prompt: string): Promise<string> {
   try {
@@ -58,20 +100,19 @@ export async function chatWithGemini(prompt: string): Promise<string> {
       {
         contents: [
           {
-            parts: [{ text: prompt }]
+            parts: [{ text: SYSTEM_PROMPT + '\n\nUser: ' + prompt }]
           }
         ]
       },
       {
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         }
       }
     );
 
     const text = response.data.candidates?.[0]?.content?.parts?.[0]?.text;
     return text?.trim() || 'Sorry, I didn’t get that.';
-
   } catch (error: any) {
     console.error('[Gemini API Error]:', error.response?.data || error.message);
     throw new Error('Failed to chat with Gemini API.');

@@ -97,14 +97,16 @@
 
 import axios from 'axios';
 import { getAdminToken } from '../utils/keycloak';
-import { RealmConfig, User, KeycloakCreateUserPayload } from '../interface/index.interface';
+import { User, KeycloakCreateUserPayload, CreateRealmInput } from '../interface/index.interface';
 import config from '../config/env';
 
 export class KeycloakDAO {
   // CREATE REALM
-  static async createRealm(realmData: RealmConfig) {
+  static async createRealm(realmData: CreateRealmInput) {
+    console.log("realmDatarealmData",realmData);
+    
     const token = await getAdminToken();
-
+    console.log("token???", token)
     const response = await axios.post(
       `${config.keycloak.baseUrl}/admin/realms`,
       realmData,

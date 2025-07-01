@@ -185,7 +185,7 @@ export function verifyTokenLocal(): (req: Request, res: Response, next: NextFunc
     // Handle special paths
     if (req.originalUrl === '/api/v1/rules/' || req.originalUrl === '/api/v1/rules') {
       console.log("⚙️ Inside initial/tenant realm setup");
-      realm = 'RuleMaster';
+      realm = 'sonaldev';
       req.headers.operation = req.originalUrl.endsWith('/') ? 'starfish_realmsetup' : 'tenant_realmsetup';
     } else {
       realm = req.query.tenant as string || req.headers.realm as string;
@@ -193,7 +193,7 @@ export function verifyTokenLocal(): (req: Request, res: Response, next: NextFunc
       // Special handling for DELETE by path
       const match = req.originalUrl.match(/^\/api\/v1\/rules\/([^/?]+)/);
       if (!realm && match && req.method === 'DELETE') {
-        realm = 'RuleMaster';
+        realm = 'sonaldev';
       }
     }
 

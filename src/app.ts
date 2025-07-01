@@ -90,7 +90,9 @@ import executionRoutes from './routes/execution.routes';
 import userRoutes from './routes/user.routes';
 import copilotAdapterRoutes from './routes/copilotAdapter';
 import chatbotRoutes from "./routes/chatbot.routes";
-
+import { verifyTokenLocal } from "./middlewares/keycloak-verifyToken";
+import gradeRoutes from "./routes/grade.routes";
+import tenantTemplateRoutes from "./routes/tenantTemplate.routes";
 const app = express();
 
 // ✅ Allow all origins and all headers
@@ -110,10 +112,12 @@ app.options("*", (req, res) => {
 });
 app.use(express.json());
 
-app.use('/api/copilot-backend-adapter', copilotAdapterRoutes);
+app.use('/api/copilot-backend-adapter',verifyTokenLocal(),copilotAdapterRoutes);
 app.use('/api/v1/realms', realmRoutes);
 app.use('/api/v1/rules', ruleRoutes);
 app.use('/api/v1/', executionRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/chatbot', chatbotRoutes);
+app.use('/api/v1/grades', gradeRoutes);
+app.use('/api/v1/tenant-templates', tenantTemplateRoutes);
 export default app;
