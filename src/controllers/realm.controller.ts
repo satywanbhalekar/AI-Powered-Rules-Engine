@@ -24,13 +24,7 @@ export const createRealm = async (req: Request, res: Response) => {
     }
 
     // Pass admin details along with tenantName to the service.
-    const result = await RealmService.createRealm({
-      tenantName,
-      email: admin.email,
-      lastName: admin.lastName,
-      firstName: admin.firstName,
-      role: admin.role // role is optional in your request; include if needed in the payload.
-    });
+    const result = await RealmService.createRealm(req.body);
 
     res.status(201).json({
       message: 'Realm created successfully',
