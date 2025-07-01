@@ -15,14 +15,14 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin 
+git remote add origin https://github.com/satywanbhalekar/AI-Powered-Rules-Engine.git
 git branch -M main
 git push -uf origin main
 ```
 
 ## Integrate with your tools
 
-- [ ] [Set up project integrations](https://gitlab.gitlabsh.cateina.com/gfintech/nodeserver/-/settings/integrations)
+- [ ] [Set up project integrations](https://github.com/satywanbhalekar/AI-Powered-Rules-Engine.git)
 
 ## Collaborate with your team
 
