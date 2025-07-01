@@ -1,5 +1,5 @@
 {
-  "realm": "satyam",
+  "realm": "satyawan",
   "roles": {
     "client": {
       "broker": [
@@ -351,14 +351,14 @@
   },
   "users": [
     {
-      "email": "satyam@cateina.com",
+      "email": "satyawan@cateina.com",
       "groups": [
-        "/ADMIN_satyam"
+        "/ADMIN_satyawan"
       ],
       "enabled": true,
       "lastName": "bhalekar",
-      "username": "satyam@cateina.com",
-      "firstName": "unique_user_firstname",
+      "username": "satyawan@cateina.com",
+      "firstName": "satyawan",
       "clientRoles": {
         "realm-management": [
           "realm-admin"
@@ -367,18 +367,21 @@
       "credentials": [
         {
           "type": "password",
-          "value": "9JT0l)UafKpZ",
+          "value": "O4V2Izh$#92p",
           "temporary": true
         }
       ],
       "emailVerified": true,
-      "createdTimestamp": "1751370826493"
+      "requiredActions": [
+        "UPDATE_PASSWORD"
+      ],
+      "createdTimestamp": "1751372921524"
     }
   ],
   "groups": [
     {
-      "name": "ADMIN_satyam",
-      "path": "/ADMIN_satyam",
+      "name": "ADMIN_satyawan",
+      "path": "/ADMIN_satyawan",
       "subGroups": [],
       "attributes": {},
       "realmRoles": [],
@@ -397,8 +400,8 @@
       }
     },
     {
-      "name": "USER_satyam",
-      "path": "/USER_satyam",
+      "name": "USER_satyawan",
+      "path": "/USER_satyawan",
       "subGroups": [],
       "attributes": {},
       "realmRoles": [],
