@@ -135,23 +135,24 @@ export class RealmService {
     const replacements: Record<string, string> = {
       unique_tenant_name: realm.tenantName,
       unique_user_email: realm.admin.email,
+      unique_user_firstname: realm.admin.firstName,
       unique_user_lastname: realm.admin.lastName,
       unique_user_password: randomPassword,
-      timestamp: String(Date.now()),
+      timestamp: String(Date.now()),    // ← updated here
     };
 
-    console.log('Replacements:', replacements);
+    console.log("Replacements:", replacements);
 
     // Step 3 → replace placeholders using stringified JSON
     const replacedTemplate = JSON.parse(
       JSON.stringify(templateJson)
         .replace(/unique_tenant_name/g, replacements.unique_tenant_name)
         .replace(/unique_user_email/g, replacements.unique_user_email)
+        .replace(/unique_user_firstname/g, replacements.unique_user_firstname)
         .replace(/unique_user_lastname/g, replacements.unique_user_lastname)
         .replace(/unique_user_password/g, replacements.unique_user_password)
         .replace(/timestamp/g, replacements.timestamp)
     );
-
     // Step 4 → write replaced template to file (optional)
     const fileName = './template-output.json';
     fs.writeFileSync(fileName, JSON.stringify(replacedTemplate, null, 2), 'utf-8');
