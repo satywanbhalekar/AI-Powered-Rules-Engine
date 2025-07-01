@@ -121,7 +121,10 @@ router.post('/', async (req, res): Promise<void> => {
       }
   
       const reply = await chatWithGemini(userMessage);
-      res.json({ reply }); // ✅ DO NOT return this
+      console.log("reply",reply);
+      const message=reply;
+      res.json({message});
+      //res.json({ reply }); // ✅ DO NOT return this
     } catch (error: any) {
       console.error('❌ Adapter error:', error.message || error);
       res.status(500).json({ message: '❌ Failed to process request.' });

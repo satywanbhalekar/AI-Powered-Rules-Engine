@@ -61,3 +61,10 @@ export interface KeycloakCreateUserPayload {
   }>;
   groups?: string[];
 }
+export interface CreateRealmInput {
+  tenantName: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role?: string;
+}
